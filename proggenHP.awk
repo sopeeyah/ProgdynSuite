@@ -25,7 +25,7 @@ BEGIN {
 initialDis=0; timestep=1E-15; scaling=1.0; temp=298.15
 classical=0; numimag=1; DRP=0; cannonball=0
 charge=0; multiplicity=1; method="HF/3-21G"; memory=20000000
-diag=1; checkpoint="g09.chk"; searchdir="positive"; boxon=0
+diag=1; checkpoint="g16.chk"; searchdir="positive"; boxon=0
 boxsize=10; maxAtomMove=0.1; title1="you"; title2="need"
 title3="a"; title4="progdyn.conf"; processors=1; highlevel=999
 conver1=4.184E26 #dividing by this converts amu angs^2 /s^2 to kcal/mol
