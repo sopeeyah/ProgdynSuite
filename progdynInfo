@@ -13,7 +13,7 @@ progdynstarterHP takes optional input the files listed below.  These are not nee
    detour - A signal file that, by existing, signals the program to do a side calculations
    nogo - A signal file that, by existing, signals the program to stop between points
    bypassproggen - A signal file that, by existing, signals the program to use a supplied input file geoPlusVel instead of generating one for itself. 
-   methodfile - A file that contains lines to be added to the end of each g09.com input file, such as lines that call for an NMR calculation
+   methodfile - A file that contains lines to be added to the end of each g16.com input file, such as lines that call for an NMR calculation
    ZMAT - An input file for the CFOUR (http://www.cfour.de) suite of programs.  When ZMAT is supplied, progdynstarterHP will automatically run call CFOUR (which must be set up independently by the user) by making use of the script progcfour. 
    cannontraj - A file containing a vector for each atom, used to fire an initial geometry in a particular direction.
 
@@ -34,7 +34,7 @@ runpointnumber - a running tab of the point in the trajectory
 Echeck - output form where prog2ndpoint checks the energy of the trajectory to see if it fits with the desired energy
 geoRecord - A record of all of the geoPlusVel files.
 geoPlusVel - Created by proggen, this gives the starting positions, velocities, isotopic masses, excitations of the normal modes, and initial displacements of the normal modes for current run.
-g09.com - Created by prog1stpoint, prog2ndpoint, and progdynb, this is the latest input file for Gaussian09 for current run and latest point.
+g16.com - Created by prog1stpoint, prog2ndpoint, and progdynb, this is the latest input file for Gaussian09 for current run and latest point.
 olddynrun and olderdynrun - files containing the last two outputs from Gaussian, for creation of the next point
 traj, traj1, traj2, traj3, etc. - files containing the geometries and energies for each trajectory, numbered by the isomernumber, in a format suitable for reading by Molden. 
 dyn  - A record of the Gaussian outputs.
@@ -84,8 +84,8 @@ trap "echo contents of data dir;ls -al;echo job statistics;qstat -f $PBS_JOBID;e
 head /proc/cpuinfo
 head /proc/meminfo
 
-export g09root=/apps/lms/g09_B01_XEON
-. $g09root/g09/bsd/g09.profile
+export g16root=/apps/lms/g16_B01_XEON
+. $g16root/g16/bsd/g16.profile
 
 mkdir  /tmp/$PBS_JOBID
 #mkdir /data/d-singleton/$PBS_JOBID
@@ -124,4 +124,3 @@ P.O. Box 30012
 College Station, TX  77842-3012
 (979) 845-9166
 Fax: 979-845-0653
-
