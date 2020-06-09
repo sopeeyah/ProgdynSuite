@@ -2,7 +2,7 @@
 #progdynstarterHP, made to use high-precision modes from Gaussian output with freq=hpmodes
 #updated to create a random number file temp811 that is used by proggenHP
 #version Sep 2005, made for workstations
-#version Aug 2007 to allow periodic copying of g09.log to dyn putting it under control of progdynb
+#version Aug 2007 to allow periodic copying of g16.log to dyn putting it under control of progdynb
 #version Feb 2008 moves variables like the scratch directory and location of randgen to the beginning
 #version Mar 2008 added proganal reporting to points 1 and 2
 #version Jan 2009 fixed bug generator of having proganal run twice in checking for complete runs
@@ -27,7 +27,7 @@
 # C. loop over propagation steps
 # 
 #  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-#TEMPORARY_DIR, RAND_DIR, scratchdir, G09_ROOT, LOG_FILE all may need varied from system to system and assigned here or by program calling this one
+#TEMPORARY_DIR, RAND_DIR, scratchdir, G16_ROOT, LOG_FILE all may need varied from system to system and assigned here or by program calling this one
 
 #Variable Setup
 LOG_FILE="docslog"
@@ -40,9 +40,9 @@ export JOB_NAME=freqinHP
 export GAUSS_SCRDIR="$TEMPORARY_DIR/temporary_files"
 export PROG_SCRDIR="$TEMPORARY_DIR/prog_files"
 export PROG_HOME="$TEMPORARY_DIR"
-export G09_ROOT="/blueapps/chem"
+export G16_ROOT="/blueapps/chem"
 export RAND_DIR="$TEMPORARY_DIR"
-#. $G09_ROOT/gaussian/g09/bsd/g09.profile
+#. $G16_ROOT/gaussian/g16/bsd/g16.profile
 
 cd $TEMPORARY_DIR
 
@@ -95,38 +95,38 @@ do
          echo "1 ----trajectory isomer number----" > isomernumber
       fi
       echo 1 > runpointnumber
-      if (test -f g09.com) then
-        rm g09.com
+      if (test -f g16.com) then
+        rm g16.com
       fi
-      awk -f $TEMPORARY_DIR/prog1stpoint isomernumber > g09.com
+      awk -f $TEMPORARY_DIR/prog1stpoint isomernumber > g16.com
 #  B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2  if first part successfule then clean up and run the first input file, otherwise die
-      if (test -s g09.com) then
+      if (test -s g16.com) then
          rm tempfreqs tempredmass tempfrc tempmodes tempstangeos tempmasses temp401 temp811 tempinputgeos
          cat isomernumber >> geoRecord
          cat geoPlusVel >> geoRecord
          rm -f $PROG_SCRDIR/goingwell
-         cp $TEMPORARY_DIR/g09.com $PROG_SCRDIR/g09.com
-	 cp $PROG_SCRDIR/g09.com $COM_LOG_FILES/g09"$RUN_NUMBER".com
-	 $G09_ROOT/bin/rung09 $PROG_SCRDIR/g09.com > $PROG_SCRDIR/g09.log
-	 cp $PROG_SCRDIR/g09.log $COM_LOG_FILES/g09"$RUN_NUMBER".log
+         cp $TEMPORARY_DIR/g16.com $PROG_SCRDIR/g16.com
+	 cp $PROG_SCRDIR/g16.com $COM_LOG_FILES/g16"$RUN_NUMBER".com
+	 $G16_ROOT/bin/rung16 $PROG_SCRDIR/g16.com > $PROG_SCRDIR/g16.log
+	 cp $PROG_SCRDIR/g16.log $COM_LOG_FILES/g16"$RUN_NUMBER".log
 	 ((RUN_NUMBER++))
-         grep 'Normal termination' $PROG_SCRDIR/g09.log > $PROG_SCRDIR/goingwell
+         grep 'Normal termination' $PROG_SCRDIR/g16.log > $PROG_SCRDIR/goingwell
          if (test -s $PROG_SCRDIR/goingwell) then
-            cat $PROG_SCRDIR/g09.log >> dyn
-            cp $PROG_SCRDIR/g09.log olderdynrun
+            cat $PROG_SCRDIR/g16.log >> dyn
+            cp $PROG_SCRDIR/g16.log olderdynrun
          else
-            cp $PROG_SCRDIR/g09.log $TEMPORARY_DIR/g09.log
+            cp $PROG_SCRDIR/g16.log $TEMPORARY_DIR/g16.log
             break
          fi
       else
          break
       fi
 #  B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3 if B2 worked then you are here.  create 2nd point, run it, and set up for propagation loop
-      rm g09.com
+      rm g16.com
       echo 2 > runpointnumber
-      awk -f $TEMPORARY_DIR/prog2ndpoint $PROG_SCRDIR/g09.log > g09.com
+      awk -f $TEMPORARY_DIR/prog2ndpoint $PROG_SCRDIR/g16.log > g16.com
 # before we decide to run this, check the energy
-      awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g09.log >> dynfollowfile
+      awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g16.log >> dynfollowfile
       rm -f $PROG_SCRDIR/tempdone
       tail -1 dynfollowfile | awk '/XXXX/ {print}' > $PROG_SCRDIR/tempdone
       if (test  -s $PROG_SCRDIR/tempdone) then
@@ -135,25 +135,25 @@ do
          echo 0 > runpointnumber
          break
       fi
-      if (test -s g09.com) then
+      if (test -s g16.com) then
          rm -f $PROG_SCRDIR/goingwell
-         cp $TEMPORARY_DIR/g09.com $PROG_SCRDIR/g09.com
-	 cp $PROG_SCRDIR/g09.com $COM_LOG_FILES/g09"$RUN_NUMBER".com
-	 $G09_ROOT/bin/rung09 $PROG_SCRDIR/g09.com > $PROG_SCRDIR/g09.log
-	 cp $PROG_SCRDIR/g09.log $COM_LOG_FILES/g09"$RUN_NUMBER".log
+         cp $TEMPORARY_DIR/g16.com $PROG_SCRDIR/g16.com
+	 cp $PROG_SCRDIR/g16.com $COM_LOG_FILES/g16"$RUN_NUMBER".com
+	 $G16_ROOT/bin/rung16 $PROG_SCRDIR/g16.com > $PROG_SCRDIR/g16.log
+	 cp $PROG_SCRDIR/g16.log $COM_LOG_FILES/g16"$RUN_NUMBER".log
 	 ((RUN_NUMBER++))
-         grep 'Normal termination' $PROG_SCRDIR/g09.log > $PROG_SCRDIR/goingwell
+         grep 'Normal termination' $PROG_SCRDIR/g16.log > $PROG_SCRDIR/goingwell
          if (test -s $PROG_SCRDIR/goingwell) then
-            cp $PROG_SCRDIR/g09.log olddynrun
-            cat $PROG_SCRDIR/g09.log >> dyn
-            awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g09.log >> dynfollowfile
+            cp $PROG_SCRDIR/g16.log olddynrun
+            cat $PROG_SCRDIR/g16.log >> dyn
+            awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g16.log >> dynfollowfile
             awk '/Input orientation/,/Distance matrix/ {print}' olddynrun | awk '/   0   / {print}' > old
             awk '/Input orientation/,/Distance matrix/ {print}' olderdynrun | awk '/   0   / {print}' > older
             echo 3 > runpointnumber
-            awk -f $TEMPORARY_DIR/progdynb olddynrun > g09.com
+            awk -f $TEMPORARY_DIR/progdynb olddynrun > g16.com
             rm -f old older 
          else
-            cp $PROG_SCRDIR/g09.log $TEMPORARY_DIR/g09.log
+            cp $PROG_SCRDIR/g16.log $TEMPORARY_DIR/g16.log
             break
          fi
       else
@@ -165,50 +165,50 @@ do
 # Reverse trajectories starter routine
    if [ `cat skipstart` = "reverserestart" ]; then
       
-      rm g09.com
+      rm g16.com
       echo 1 > runpointnumber
-      awk -f $TEMPORARY_DIR/prog1stpoint isomernumber > g09.com
-      if (test -s g09.com) then
+      awk -f $TEMPORARY_DIR/prog1stpoint isomernumber > g16.com
+      if (test -s g16.com) then
          rm -f $PROG_SCRDIR/goingwell
-         cp $TEMPORARY_DIR/g09.com $PROG_SCRDIR/g09.com
-	 cp $PROG_SCRDIR/g09.com $COM_LOG_FILES/g09"$RUN_NUMBER".com
-	 $G09_ROOT/bin/rung09 $PROG_SCRDIR/g09.com > $PROG_SCRDIR/g09.log
-	 cp $PROG_SCRDIR/g09.log $COM_LOG_FILES/g09"$RUN_NUMBER".log
+         cp $TEMPORARY_DIR/g16.com $PROG_SCRDIR/g16.com
+	 cp $PROG_SCRDIR/g16.com $COM_LOG_FILES/g16"$RUN_NUMBER".com
+	 $G16_ROOT/bin/rung16 $PROG_SCRDIR/g16.com > $PROG_SCRDIR/g16.log
+	 cp $PROG_SCRDIR/g16.log $COM_LOG_FILES/g16"$RUN_NUMBER".log
 	 ((RUN_NUMBER++))
-         grep 'Normal termination' $PROG_SCRDIR/g09.log > $PROG_SCRDIR/goingwell
+         grep 'Normal termination' $PROG_SCRDIR/g16.log > $PROG_SCRDIR/goingwell
          if (test -s $PROG_SCRDIR/goingwell) then
-            cp $PROG_SCRDIR/g09.log olderdynrun
+            cp $PROG_SCRDIR/g16.log olderdynrun
          else
-            cp $PROG_SCRDIR/g09.log $TEMPORARY_DIR/g09.log
+            cp $PROG_SCRDIR/g16.log $TEMPORARY_DIR/g16.log
             break
          fi
       else
          break
       fi
-      rm g09.com
+      rm g16.com
       echo 2 > runpointnumber
-      awk -f $TEMPORARY_DIR/prog2ndpoint $PROG_SCRDIR/g09.log > g09.com
-      awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g09.log >> dynfollowfile
+      awk -f $TEMPORARY_DIR/prog2ndpoint $PROG_SCRDIR/g16.log > g16.com
+      awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g16.log >> dynfollowfile
       rm -f $PROG_SCRDIR/tempdone
-      if (test -s g09.com) then
+      if (test -s g16.com) then
          rm -f $PROG_SCRDIR/goingwell
-         cp $TEMPORARY_DIR/g09.com $PROG_SCRDIR/g09.com
-         cp $PROG_SCRDIR/g09.com $COM_LOG_FILES/g09"$RUN_NUMBER".com
-	 $G09_ROOT/bin/rung09 $PROG_SCRDIR/g09.com > $PROG_SCRDIR/g09.log
-	 cp $PROG_SCRDIR/g09.log $COM_LOG_FILES/g09"$RUN_NUMBER".log
+         cp $TEMPORARY_DIR/g16.com $PROG_SCRDIR/g16.com
+         cp $PROG_SCRDIR/g16.com $COM_LOG_FILES/g16"$RUN_NUMBER".com
+	 $G16_ROOT/bin/rung16 $PROG_SCRDIR/g16.com > $PROG_SCRDIR/g16.log
+	 cp $PROG_SCRDIR/g16.log $COM_LOG_FILES/g16"$RUN_NUMBER".log
 	 ((RUN_NUMBER++))
-         grep 'Normal termination' $PROG_SCRDIR/g09.log > $PROG_SCRDIR/goingwell
+         grep 'Normal termination' $PROG_SCRDIR/g16.log > $PROG_SCRDIR/goingwell
          if (test -s $PROG_SCRDIR/goingwell) then
-            cp $PROG_SCRDIR/g09.log olddynrun
-            cat $PROG_SCRDIR/g09.log >> dyn
-            awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g09.log >> dynfollowfile
+            cp $PROG_SCRDIR/g16.log olddynrun
+            cat $PROG_SCRDIR/g16.log >> dyn
+            awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g16.log >> dynfollowfile
             awk '/Input orientation/,/Distance matrix/ {print}' olddynrun | awk '/   0   / {print}' > old
             awk '/Input orientation/,/Distance matrix/ {print}' olderdynrun | awk '/   0   / {print}' > older
             echo 3 > runpointnumber
-            awk -f $TEMPORARY_DIR/progdynb olddynrun > g09.com
+            awk -f $TEMPORARY_DIR/progdynb olddynrun > g16.com
             rm -f old older
          else
-            cp $PROG_SCRDIR/g09.log $TEMPORARY_DIR/g09.log
+            cp $PROG_SCRDIR/g16.log $TEMPORARY_DIR/g16.log
             break
          fi
       else
@@ -228,22 +228,23 @@ do
       awk 'BEGIN {getline;i=$1+1;print i}' $PROG_SCRDIR/temp533 > runpointnumber
       rm $PROG_SCRDIR/temp533
       rm -f $PROG_SCRDIR/goingwell
-      cp $TEMPORARY_DIR/g09.com $PROG_SCRDIR/g09.com
-	 cp $PROG_SCRDIR/g09.com $COM_LOG_FILES/g09"$RUN_NUMBER".com
-	 $G09_ROOT/bin/rung09 $PROG_SCRDIR/g09.com > $PROG_SCRDIR/g09.log
-	 cp $PROG_SCRDIR/g09.log $COM_LOG_FILES/g09"$RUN_NUMBER".log
+      cp $TEMPORARY_DIR/g16.com $PROG_SCRDIR/g16.com
+	 cp $PROG_SCRDIR/g16.com $COM_LOG_FILES/g16"$RUN_NUMBER".com
+	 $G16_ROOT/bin/rung16 $PROG_SCRDIR/g16.com > $PROG_SCRDIR/g16.log
+	 cp $PROG_SCRDIR/g16.log $COM_LOG_FILES/g16"$RUN_NUMBER".log
 	 ((RUN_NUMBER++))
-      grep 'Normal termination' $PROG_SCRDIR/g09.log > $PROG_SCRDIR/goingwell
+      grep 'Normal termination' $PROG_SCRDIR/g16.log > $PROG_SCRDIR/goingwell
       if (test -s $PROG_SCRDIR/goingwell) then
-         awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g09.log >> $TEMPORARY_DIR/dynfollowfile
+         awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g16.log >> $TEMPORARY_DIR/dynfollowfile
          mv olddynrun olderdynrun
-         awk '/Input orientation/,/Distance matrix/ {print}' $PROG_SCRDIR/g09.log | awk '/   0   / {print}' > old
-         cp $PROG_SCRDIR/g09.log olddynrun
+         awk '/Input orientation/,/Distance matrix/ {print}' $PROG_SCRDIR/g16.log | awk '/   0   / {print}' > old
+         cp $PROG_SCRDIR/
+	 .log olddynrun
          awk '/Input orientation/,/Distance matrix/ {print}' olderdynrun | awk '/   0   / {print}' > older
-         awk -f $TEMPORARY_DIR/progdynb $PROG_SCRDIR/g09.log > g09.com
+         awk -f $TEMPORARY_DIR/progdynb $PROG_SCRDIR/g16.log > g16.com
          rm -f old older 
       else
-         cp $PROG_SCRDIR/g09.log $TEMPORARY_DIR/g09.log
+         cp $PROG_SCRDIR/g16.log $TEMPORARY_DIR/g16.log
          break
       fi
 # kludge to do a side calculation of NMR using progcfour.  If ZMAT is there then it gets ran and renamed.
@@ -266,7 +267,7 @@ do
          date >> $LOG_FILE
          cat run.com >> $LOG_FILE
          cp run.log temp.log
-         $G09_ROOT/bin/rung09 $TEMPORARY_DIR/run.com > $TEMPORARY_DIR/run.log
+         $G16_ROOT/bin/rung16 $TEMPORARY_DIR/run.com > $TEMPORARY_DIR/run.log
          
       fi
 
