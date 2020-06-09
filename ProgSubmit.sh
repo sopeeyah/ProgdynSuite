@@ -14,7 +14,7 @@
 #	detour - A signal file that, by existing, signals the program to do side calculations
 #	nogo - A signal file that, by existing, signals the program to stop between points
 #	bypassproggen - A signal file that, by existing, signals the program to use a supplied geoPlusVel file instead of generating one for itself
-#	methodfile - A file that contains lines to be added at the end of each g09.com input file, such as lines that call for an NMR calculation
+#	methodfile - A file that contains lines to be added at the end of each g16.com input file, such as lines that call for an NMR calculation
 #	ZMAT - An input file for the CFOUR suite of programs. When ZMAT is supplies, progdynstarterHP will run call CFOUR by making use of the progcfour script
 #	cannontraj - A file containing a vector for each atom, used to fire an initial geometry in a particular direction
 
@@ -41,7 +41,7 @@
 #	geoRecord - A record of all the geoPlusVel files
 #	geoPlusVel - Created by proggen, this gives the starting positions, velocities, isotopic masses, excitations of the normal modes, and initial
 #		     displacements of the normal modes for current run
-#	g09.com - Created by prog1stpoint, prog2ndpoint, and progdynb, this is the latest input file for Gaussian09 for current run and latest point
+#	g16.com - Created by prog1stpoint, prog2ndpoint, and progdynb, this is the latest input file for Gaussian09 for current run and latest point
 #	olddynrun and olderdynrun - Contains the last two outputs from Gaussian, for creation of the next point
 #	traj, traj1, traj2, traj3, etc. - Contains the geometries and energies for each trajectory, numbered by the isomernumber, in a format suitable for reading by Molden
 #	dyn - A record of the Gaussian outputs
@@ -60,9 +60,9 @@ export GAUSS_SCRDIR="$TEMPORARY_DIR/temporary_files"
 export PROG_SCRDIR="$TEMPORARY_DIR/prog_files"
 export JOB_NAME=freqinHP
 export PROG_HOME=$TEMPORARY_DIR
-export G09_ROOT="/blueapps/chem"
+export G16_ROOT="/blueapps/chem"
 
-#export PATH=$PATH:/blueapps/chem/gaussian/g09 #Makes it so g09.profile executes properly by giving it the location of executable file gau-machine
+#export PATH=$PATH:/blueapps/chem/gaussian/g16 #Makes it so g16.profile executes properly by giving it the location of executable file gau-machine
  
 #set up function.  this isn't called/run here.  It's just used 
 #   if the job is canceled via a signal
