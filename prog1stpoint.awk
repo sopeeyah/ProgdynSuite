@@ -8,7 +8,7 @@ BEGIN {
 # version Feb 2008 incorporates methodfile, boxon and boxsize, though this point unaffected by box
 # version Jan 2008 - allows for ONIOM jobs, fixed atoms
 # version Sept 2005 - incorportates meth3, meth4, meth5, meth6, but not yet rotation
-# this program creates the first input file for g09
+# this program creates the first input file for g16
 # the title should be changed as appropriate
 # the isomer number comes from a file isomernumber
 
@@ -17,7 +17,7 @@ BEGIN {
 initialDis=0; timestep=1E-15; scaling=1.0; temp=298.15
 classical=0; numimag=1; DRP=0; cannonball=0
 memory=20000000
-diag=1; checkpoint="g09.chk"; searchdir="positive"; boxon=0
+diag=1; checkpoint="g16.chk"; searchdir="positive"; boxon=0
 boxsize=10; maxAtomMove=0.1; title1="you"; title2="need"
 title3="a"; title4="progdyn.conf"; processors=1; highlevel=999; linkatoms=0
 geometry="nonlinear";nonstandard=0
