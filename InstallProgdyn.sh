@@ -60,7 +60,7 @@ mv $INSTALL_SCRIPT_LOCATION/ProgSubmitWrapper.sh $HOME/ProgdynSuite/SubmitScript
 mv $INSTALL_SCRIPT_LOCATION/RemoveEmptyTempFiles.sh $HOME/ProgdynSuite/RunOutputs
 mv $INSTALL_SCRIPT_LOCATION/readMe $HOME/ProgdynSuite
 mv $INSTALL_SCRIPT_LOCATION/progdynInfo $HOME/ProgdynSuite
-mv $INSTALL_SCRIPT_LOCATION/g09.sh $HOME/ProgdynSuite/SubmitScripts
+mv $INSTALL_SCRIPT_LOCATION/g16.sh $HOME/ProgdynSuite/SubmitScripts
 mv $INSTALL_SCRIPT_LOCATION/RunJob.sh $HOME/ProgdynSuite/SubmitScripts
 mv $INSTALL_SCRIPT_LOCATION/MakeXYZ.sh $HOME/ProgdynSuite/SubmitScripts
 mv $INSTALL_SCRIPT_LOCATION/num_atoms_coords.awk $HOME/ProgdynSuite/SubmitScripts
