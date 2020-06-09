@@ -16,12 +16,12 @@ do
 		longest_file=$log_file
 	fi
 done
-longest_file=${longest_file/g09}
+longest_file=${longest_file/g16}
 for log_file in "${all_log_files[@]}"
 do
 	changed_value=0
 	old_log_file_name=$log_file
-	log_file_num=${log_file/g09}
+	log_file_num=${log_file/g16}
 	while (( ${#log_file_num} < ${#longest_file} ))
 	do
 		log_file_num="0"$log_file_num
@@ -29,7 +29,7 @@ do
 	done
 	if (($changed_value == "1"))
 	then
-		mv $old_log_file_name "g09"$log_file_num
+		mv $old_log_file_name "g16"$log_file_num
 	fi
 done
 all_log_files=( `find *.log`) 
