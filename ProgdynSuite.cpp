@@ -396,7 +396,7 @@ public:
 		multiplicity = "1";
 		memory = "4gb";
 		processors = 2;
-		checkpoint = "g09.chk";
+		checkpoint = "g16.chk";
 		initialDis = 2;
 		diag = 0;
 		timestep = 1E-15;
@@ -971,7 +971,7 @@ void read_tempmodes(map< Tuple<int,int,int>, float >& map_tuples, unsigned int n
 
 void prog1stpoint(ProgdynConf& progdyn_conf, int isomernum, int runpointnum) {
 	// input(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, ifstream geoPlusVel)
-	// output(ofstream diagnostics, ofstream g09.com)
+	// output(ofstream diagnostics, ofstream g16.com)
 	string method = progdyn_conf.get_method();
 	string meth2 = progdyn_conf.get_meth2();
 	string meth3 = progdyn_conf.get_meth3();
@@ -1048,102 +1048,102 @@ void prog1stpoint(ProgdynConf& progdyn_conf, int isomernum, int runpointnum) {
 	}
 	geoPlusVel.close();
 
-	ofstream g09_com;
-	g09_com.open("g09.com");
-	g09_com << "%nproc=" << processors << endl;
-	g09_com << "%mem=" << memory << endl;
-	if(killcheck != 1) g09_com << "%chk=" << checkpoint << endl;
+	ofstream g16_com;
+	g16_com.open("g16.com");
+	g16_com << "%nproc=" << processors << endl;
+	g16_com << "%mem=" << memory << endl;
+	if(killcheck != 1) g16_com << "%chk=" << checkpoint << endl;
 	if(nonstandard == 0) {
-		g09_com << "# " << method << " force scf=(tight,nosym) " << endl;
-		if(meth2 == "unrestricted") g09_com << "guess=mix" << endl;
-		if(meth3.size() > 2) g09_com << meth3 << endl;
-		if(meth4.size() > 2) g09_com << meth4 << endl;
+		g16_com << "# " << method << " force scf=(tight,nosym) " << endl;
+		if(meth2 == "unrestricted") g16_com << "guess=mix" << endl;
+		if(meth3.size() > 2) g16_com << meth3 << endl;
+		if(meth4.size() > 2) g16_com << meth4 << endl;
 	}
 	else if(nonstandard == 1) {
-		g09_com << "# " << endl;
-		g09_com << "nonstd" << endl;
+		g16_com << "# " << endl;
+		g16_com << "nonstd" << endl;
 		ifstream nonstandard;
 		nonstandard.open("nonstandard");
 		while(getline(nonstandard, line)) {
-			g09_com << line << endl;
+			g16_com << line << endl;
 		}
 		nonstandard.close();
 	}
-	g09_com << endl;
-	g09_com << title1 << " " << title2 << " " << title3 << " " << title4 << endl;
-	g09_com << "runpoint  " << runpointnum << endl;
-	g09_com << "runisomer  " << isomernum << endl;
-	g09_com << endl;
-	g09_com << charge << " " << multiplicity << endl;
-	g09_com.precision(7);
-	g09_com.setf(ios::fixed);
+	g16_com << endl;
+	g16_com << title1 << " " << title2 << " " << title3 << " " << title4 << endl;
+	g16_com << "runpoint  " << runpointnum << endl;
+	g16_com << "runisomer  " << isomernum << endl;
+	g16_com << endl;
+	g16_com << charge << " " << multiplicity << endl;
+	g16_com.precision(7);
+	g16_com.setf(ios::fixed);
 	for(unsigned int i = 0; i < vecAtoms.size(); i++) {
-		g09_com << vecAtoms[i].get_atomic_symbol() << " " << vecAtoms[i].get_x() << " " << vecAtoms[i].get_y() << " " << vecAtoms[i].get_z() << endl;
-		if((i > highlevel) && (i <= (highlevel+linkatoms))) g09_com << "M H" << endl;
-		else if(i > (highlevel+linkatoms)) g09_com << "M" << endl;
+		g16_com << vecAtoms[i].get_atomic_symbol() << " " << vecAtoms[i].get_x() << " " << vecAtoms[i].get_y() << " " << vecAtoms[i].get_z() << endl;
+		if((i > highlevel) && (i <= (highlevel+linkatoms))) g16_com << "M H" << endl;
+		else if(i > (highlevel+linkatoms)) g16_com << "M" << endl;
 	}
-	g09_com << endl;
-	if(meth5.size() > 2) g09_com << meth5 << endl;
-	if(meth6.size() > 2) g09_com << meth6 << endl;
+	g16_com << endl;
+	if(meth5.size() > 2) g16_com << meth5 << endl;
+	if(meth6.size() > 2) g16_com << meth6 << endl;
 	if(methodfilelines >= 1) {
 		ifstream methodfile;
 		methodfile.open("methodfile");
 		for(unsigned int i = 0; i < methodfilelines; i++) {
 			getline(methodfile, line);
-			g09_com << line << endl;
+			g16_com << line << endl;
 		}
 		methodfile.close();
 	}
 	if((nmrtype > 0) && ((runpointnum % nmrevery) == 0)) {
-		g09_com << "--link1--" << endl;
-		g09_com << "%nproc=" << processors << endl;
-		g09_com << "%mem=" << memory << endl;
-		g09_com << "%chk=" << checkpoint << endl;
-		g09_com << "# " << nmrmethod << " nmr=giao geom=check" << endl;
-		if(nmrmethod == method) g09_com << "guess=tcheck" << endl;
-		if(meth7.size() > 2) g09_com << meth7 << endl;
-		g09_com << endl;
-		g09_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
-		g09_com << "runpoint ," << runpointnum << endl;
-		g09_com << "runisomer ," << isomernum << endl;
-		g09_com << endl;
-		g09_com << charge << "," << multiplicity << endl;		
+		g16_com << "--link1--" << endl;
+		g16_com << "%nproc=" << processors << endl;
+		g16_com << "%mem=" << memory << endl;
+		g16_com << "%chk=" << checkpoint << endl;
+		g16_com << "# " << nmrmethod << " nmr=giao geom=check" << endl;
+		if(nmrmethod == method) g16_com << "guess=tcheck" << endl;
+		if(meth7.size() > 2) g16_com << meth7 << endl;
+		g16_com << endl;
+		g16_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
+		g16_com << "runpoint ," << runpointnum << endl;
+		g16_com << "runisomer ," << isomernum << endl;
+		g16_com << endl;
+		g16_com << charge << "," << multiplicity << endl;		
 	}
 	if((nmrtype > 1) && ((runpointnum % nmrevery) == 0)) {
-		g09_com << "--link1--" << endl;
-		g09_com << "%nproc=" << processors << endl;
-		g09_com << "%mem=" << memory << endl;
-		g09_com << "%chk=" << checkpoint << endl;
-		g09_com << "# " << nmrmethod2 << " nmr=giao geom=check" << endl;
-		if(meth7.size() > 2) g09_com << meth7 << endl;
-		g09_com << endl;
-		g09_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
-		g09_com << "runpoint ," << runpointnum << endl;
-		g09_com << "runisomer ," << isomernum << endl;
-		g09_com << endl;
-		g09_com << charge << "," << multiplicity << endl;		
+		g16_com << "--link1--" << endl;
+		g16_com << "%nproc=" << processors << endl;
+		g16_com << "%mem=" << memory << endl;
+		g16_com << "%chk=" << checkpoint << endl;
+		g16_com << "# " << nmrmethod2 << " nmr=giao geom=check" << endl;
+		if(meth7.size() > 2) g16_com << meth7 << endl;
+		g16_com << endl;
+		g16_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
+		g16_com << "runpoint ," << runpointnum << endl;
+		g16_com << "runisomer ," << isomernum << endl;
+		g16_com << endl;
+		g16_com << charge << "," << multiplicity << endl;		
 	}
 	if((nmrtype > 2) && ((runpointnum % nmrevery) == 0)) {
-		g09_com << "--link1--" << endl;
-		g09_com << "%nproc=" << processors << endl;
-		g09_com << "%mem=" << memory << endl;
-		g09_com << "%chk=" << checkpoint << endl;
-		g09_com << "# " << nmrmethod3 << " nmr=giao geom=check" << endl;
-		if(meth7.size() > 2) g09_com << meth7 << endl;
-		g09_com << endl;
-		g09_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
-		g09_com << "runpoint ," << runpointnum << endl;
-		g09_com << "runisomer ," << isomernum << endl;
-		g09_com << endl;
-		g09_com << charge << "," << multiplicity << endl;		
+		g16_com << "--link1--" << endl;
+		g16_com << "%nproc=" << processors << endl;
+		g16_com << "%mem=" << memory << endl;
+		g16_com << "%chk=" << checkpoint << endl;
+		g16_com << "# " << nmrmethod3 << " nmr=giao geom=check" << endl;
+		if(meth7.size() > 2) g16_com << meth7 << endl;
+		g16_com << endl;
+		g16_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
+		g16_com << "runpoint ," << runpointnum << endl;
+		g16_com << "runisomer ," << isomernum << endl;
+		g16_com << endl;
+		g16_com << charge << "," << multiplicity << endl;		
 	}
-	g09_com << endl << endl << endl;
-	g09_com.close();
+	g16_com << endl << endl << endl;
+	g16_com.close();
 }
 
-void prog2ndpoint(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, string trajdirection, string g09_log_filepath) {
+void prog2ndpoint(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, string trajdirection, string g16_log_filepath) {
 	// input(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, string trajdirection, ifstream geoPlusVel, ifstream methodfile)
-	// output(ofstream diagnostics, ofstream traj, ofstream Echeck, ofstream g09.com)
+	// output(ofstream diagnostics, ofstream traj, ofstream Echeck, ofstream g16.com)
 	string method = progdyn_conf.get_method();
 	string meth2 = progdyn_conf.get_meth2();
 	string meth3 = progdyn_conf.get_meth3();
@@ -1200,33 +1200,33 @@ void prog2ndpoint(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, str
 		diagnostics.close();
 	}
 
-	ofstream g09_com;
-	g09_com.open("g09.com");
-	g09_com << "%nproc=" << processors << endl;
-	g09_com << "%mem=" << memory << endl;
-	if(killcheck != 1) g09_com << "%chk=" << checkpoint << endl;
+	ofstream g16_com;
+	g16_com.open("g16.com");
+	g16_com << "%nproc=" << processors << endl;
+	g16_com << "%mem=" << memory << endl;
+	if(killcheck != 1) g16_com << "%chk=" << checkpoint << endl;
 	if(nonstandard == 0) {
-		g09_com << "# " << method << " force scf=(tight,nosym) " << endl;
-		if(meth2 == "unrestricted") g09_com << "guess=mix" << endl;
-		if(meth3.size() > 2) g09_com << meth3 << endl;
-		if(meth4.size() > 2) g09_com << meth4 << endl;
+		g16_com << "# " << method << " force scf=(tight,nosym) " << endl;
+		if(meth2 == "unrestricted") g16_com << "guess=mix" << endl;
+		if(meth3.size() > 2) g16_com << meth3 << endl;
+		if(meth4.size() > 2) g16_com << meth4 << endl;
 	}
 	else if(nonstandard == 1) {
-		g09_com << "# " << endl;
-		g09_com << "nonstd" << endl;
+		g16_com << "# " << endl;
+		g16_com << "nonstd" << endl;
 		ifstream nonstandard;
 		nonstandard.open("nonstandard");
 		while(getline(nonstandard, line)) {
-			g09_com << line << endl;
+			g16_com << line << endl;
 		}
 		nonstandard.close();
 	}
-	g09_com << endl;
-	g09_com << title1 << " " << title2 << " " << title3 << " " << title4 << endl;
-	g09_com << "runpoint  " << runpointnum << endl;
-	g09_com << "runisomer  " << isomernum << endl;
-	g09_com << endl;
-	g09_com << charge << " " << multiplicity << endl;
+	g16_com << endl;
+	g16_com << title1 << " " << title2 << " " << title3 << " " << title4 << endl;
+	g16_com << "runpoint  " << runpointnum << endl;
+	g16_com << "runisomer  " << isomernum << endl;
+	g16_com << endl;
+	g16_com << charge << " " << multiplicity << endl;
 
 	vector<Atom> vecAtoms;
 	ifstream geoPlusVel;
@@ -1318,9 +1318,9 @@ void prog2ndpoint(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, str
 	}
 	traj.close();
 
-	ifstream g09_log;
-	g09_log.open(g09_log_filepath.c_str());
-	while(getline(g09_log, line)) {
+	ifstream g16_log;
+	g16_log.open(g16_log_filepath.c_str());
+	while(getline(g16_log, line)) {
 		if(line.find("SCF DONE") != string::npos || line.find("EUMP2 =") != string::npos|| line.find("Energy=") != string::npos) {
 			ss.str(string()); ss.clear();
 			string pos_1, pos_3, pos_6;
@@ -1422,7 +1422,7 @@ void prog2ndpoint(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, str
 			}
 		}
 	}
-	g09_log.close();
+	g16_log.close();
 
 	if(DRP == 0) {
 		ofstream Echeck;
@@ -1468,69 +1468,69 @@ void prog2ndpoint(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, str
 			diagnostics << " " << vecAtoms.at(i).get_y_force() << " " << vecAtoms.at(i).get_z_force() << endl;
 			diagnostics.close();
 		}
-		g09_com.precision(7);
-		g09_com.setf(ios::fixed);
-		g09_com << vecAtoms[i].get_atomic_symbol() << " " << vecAtoms[i].get_x_after_vel() << " " << vecAtoms[i].get_y_after_vel() << " " << vecAtoms[i].get_z_after_vel() << endl;
-		if((i > highlevel) && (i <= (highlevel+linkatoms))) g09_com << "M H" << endl;
-		else if(i > (highlevel+linkatoms)) g09_com << "M" << endl;
+		g16_com.precision(7);
+		g16_com.setf(ios::fixed);
+		g16_com << vecAtoms[i].get_atomic_symbol() << " " << vecAtoms[i].get_x_after_vel() << " " << vecAtoms[i].get_y_after_vel() << " " << vecAtoms[i].get_z_after_vel() << endl;
+		if((i > highlevel) && (i <= (highlevel+linkatoms))) g16_com << "M H" << endl;
+		else if(i > (highlevel+linkatoms)) g16_com << "M" << endl;
 	}
-	g09_com << endl;
-	if(meth5.size() > 2) g09_com << meth5 << endl;
-	if(meth6.size() > 2) g09_com << meth6 << endl;
+	g16_com << endl;
+	if(meth5.size() > 2) g16_com << meth5 << endl;
+	if(meth6.size() > 2) g16_com << meth6 << endl;
 	if(methodfilelines >= 1) {
 		ifstream methodfile;
 		methodfile.open("methodfile");
 		for(unsigned int i = 0; i < methodfilelines; i++) {
 			getline(methodfile, line);
-			g09_com << line << endl;
+			g16_com << line << endl;
 		}
 		methodfile.close();
 	}
 	if((nmrtype > 0) && ((runpointnum % nmrevery) == 0)) {
-		g09_com << "--link1--" << endl;
-		g09_com << "%nproc=" << processors << endl;
-		g09_com << "%mem=" << memory << endl;
-		g09_com << "%chk=" << checkpoint << endl;
-		g09_com << "# " << nmrmethod << " nmr=giao geom=check" << endl;
-		if(nmrmethod == method) g09_com << "guess=tcheck" << endl;
-		if(meth7.size() > 2) g09_com << meth7 << endl;
-		g09_com << endl;
-		g09_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
-		g09_com << "runpoint ," << runpointnum << endl;
-		g09_com << "runisomer ," << isomernum << endl;
-		g09_com << endl;
-		g09_com << charge << "," << multiplicity << endl;		
+		g16_com << "--link1--" << endl;
+		g16_com << "%nproc=" << processors << endl;
+		g16_com << "%mem=" << memory << endl;
+		g16_com << "%chk=" << checkpoint << endl;
+		g16_com << "# " << nmrmethod << " nmr=giao geom=check" << endl;
+		if(nmrmethod == method) g16_com << "guess=tcheck" << endl;
+		if(meth7.size() > 2) g16_com << meth7 << endl;
+		g16_com << endl;
+		g16_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
+		g16_com << "runpoint ," << runpointnum << endl;
+		g16_com << "runisomer ," << isomernum << endl;
+		g16_com << endl;
+		g16_com << charge << "," << multiplicity << endl;		
 	}
 	if((nmrtype > 1) && ((runpointnum % nmrevery) == 0)) {
-		g09_com << "--link1--" << endl;
-		g09_com << "%nproc=" << processors << endl;
-		g09_com << "%mem=" << memory << endl;
-		g09_com << "%chk=" << checkpoint << endl;
-		g09_com << "# " << nmrmethod2 << " nmr=giao geom=check" << endl;
-		if(meth7.size() > 2) g09_com << meth7 << endl;
-		g09_com << endl;
-		g09_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
-		g09_com << "runpoint ," << runpointnum << endl;
-		g09_com << "runisomer ," << isomernum << endl;
-		g09_com << endl;
-		g09_com << charge << "," << multiplicity << endl;		
+		g16_com << "--link1--" << endl;
+		g16_com << "%nproc=" << processors << endl;
+		g16_com << "%mem=" << memory << endl;
+		g16_com << "%chk=" << checkpoint << endl;
+		g16_com << "# " << nmrmethod2 << " nmr=giao geom=check" << endl;
+		if(meth7.size() > 2) g16_com << meth7 << endl;
+		g16_com << endl;
+		g16_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
+		g16_com << "runpoint ," << runpointnum << endl;
+		g16_com << "runisomer ," << isomernum << endl;
+		g16_com << endl;
+		g16_com << charge << "," << multiplicity << endl;		
 	}
 	if((nmrtype > 2) && ((runpointnum % nmrevery) == 0)) {
-		g09_com << "--link1--" << endl;
-		g09_com << "%nproc=" << processors << endl;
-		g09_com << "%mem=" << memory << endl;
-		g09_com << "%chk=" << checkpoint << endl;
-		g09_com << "# " << nmrmethod2 << " nmr=giao geom=check" << endl;
-		if(meth7.size() > 2) g09_com << meth7 << endl;
-		g09_com << endl;
-		g09_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
-		g09_com << "runpoint ," << runpointnum << endl;
-		g09_com << "runisomer ," << isomernum << endl;
-		g09_com << endl;
-		g09_com << charge << "," << multiplicity << endl;
+		g16_com << "--link1--" << endl;
+		g16_com << "%nproc=" << processors << endl;
+		g16_com << "%mem=" << memory << endl;
+		g16_com << "%chk=" << checkpoint << endl;
+		g16_com << "# " << nmrmethod2 << " nmr=giao geom=check" << endl;
+		if(meth7.size() > 2) g16_com << meth7 << endl;
+		g16_com << endl;
+		g16_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
+		g16_com << "runpoint ," << runpointnum << endl;
+		g16_com << "runisomer ," << isomernum << endl;
+		g16_com << endl;
+		g16_com << charge << "," << multiplicity << endl;
 	}
-	g09_com << endl << endl << endl;
-	g09_com.close();
+	g16_com << endl << endl << endl;
+	g16_com.close();
 	traj.open("traj", fstream::app);
 	traj << numAtoms << endl;
 	traj << newPotentialE << " " << title1 << " " << title2 << " " << title3 << " " << title4 << " runpoint " << runpointnum << " runisomer " << isomernum << endl;
@@ -1637,9 +1637,9 @@ void proganal(int isomernum, int runpointnum, string trajdirection, bool& nogo, 
 	dynfollowfile.close();
 }
 
-void progdynb(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, string g09_log_filepath) {
-	// input(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, string g09_log_filepath, ifstream geoPlusVel, ifstream old, ifstream older, ifstream oldAdjForces, ifstream maxMove, ifsream uptimelist) 
-	// output(ofstream diagnostics, ofstream vellist, ofstream oldAdjForces, ofstream maxMove, ofstream ZMAT, ofstream dyn, ofstream traj, ofstream g09.com)
+void progdynb(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, string g16_log_filepath) {
+	// input(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, string g16_log_filepath, ifstream geoPlusVel, ifstream old, ifstream older, ifstream oldAdjForces, ifstream maxMove, ifsream uptimelist) 
+	// output(ofstream diagnostics, ofstream vellist, ofstream oldAdjForces, ofstream maxMove, ofstream ZMAT, ofstream dyn, ofstream traj, ofstream g16.com)
 	string method = progdyn_conf.get_method();
 	string meth2 = progdyn_conf.get_meth2();
 	string meth3 = progdyn_conf.get_meth3();
@@ -1826,9 +1826,9 @@ void progdynb(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, string 
 	}
 	vellist.close();
 
-	ifstream g09_log;
-	g09_log.open(g09_log_filepath.c_str());
-	while(getline(g09_log, line)) {
+	ifstream g16_log;
+	g16_log.open(g16_log_filepath.c_str());
+	while(getline(g16_log, line)) {
 		if(line.find("SCF DONE") != string::npos || line.find("EUMP2 =") != string::npos || line.find("Energy=") != string::npos || line.find("ONIOM:") != string::npos) {
 			ss.str(string()); ss.clear();
 			string pos_1, pos_3, pos_6;
@@ -1920,7 +1920,7 @@ void progdynb(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, string 
 			}
 		}
 	}
-	g09_log.close();
+	g16_log.close();
 
 	if(DRP == 1) {
 		maxForce = 0;
@@ -2002,96 +2002,96 @@ void progdynb(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, string 
 			}
 		}
 	}
-	if((runpointnum % keepevery) == 0) cat_append("g09.log", "dyn"); // cat g09.log >> dyn
+	if((runpointnum % keepevery) == 0) cat_append("g16.log", "dyn"); // cat g16.log >> dyn
 
-	ofstream g09_com;
-	g09_com.open("g09.com");
-	g09_com << "%nproc=" << processors << endl;
-	g09_com << "%mem=" << memory << endl;
-	if(killcheck != 1) g09_com << "%chk=" << checkpoint << endl;
+	ofstream g16_com;
+	g16_com.open("g16.com");
+	g16_com << "%nproc=" << processors << endl;
+	g16_com << "%mem=" << memory << endl;
+	if(killcheck != 1) g16_com << "%chk=" << checkpoint << endl;
 	if(nonstandard == 0) {
-		g09_com << "# " << method << " force scf=(tight,nosym) " << endl;
-		if(meth2 == "unrestricted") g09_com << "guess=mix" << endl;
-		if(meth3.size() > 2) g09_com << meth3 << endl;
-		if(meth4.size() > 2) g09_com << meth4 << endl;
+		g16_com << "# " << method << " force scf=(tight,nosym) " << endl;
+		if(meth2 == "unrestricted") g16_com << "guess=mix" << endl;
+		if(meth3.size() > 2) g16_com << meth3 << endl;
+		if(meth4.size() > 2) g16_com << meth4 << endl;
 	}
 	else if(nonstandard == 1) {
-		g09_com << "# " << endl;
-		g09_com << "nonstd" << endl;
+		g16_com << "# " << endl;
+		g16_com << "nonstd" << endl;
 		ifstream nonstandard;
 		nonstandard.open("nonstandard");
 		while(getline(nonstandard, line)) {
-			g09_com << line << endl;
+			g16_com << line << endl;
 		}
 		nonstandard.close();
 	}
-	g09_com << endl;
-	g09_com << title1 << " " << title2 << " " << title3 << " " << title4 << endl;
-	g09_com << "runpoint  " << runpointnum << endl;
-	g09_com << "runisomer  " << isomernum << endl;
-	g09_com << endl;
-	g09_com << charge << " " << multiplicity << endl;
-	g09_com.precision(7);
-	g09_com.setf(ios::fixed);
+	g16_com << endl;
+	g16_com << title1 << " " << title2 << " " << title3 << " " << title4 << endl;
+	g16_com << "runpoint  " << runpointnum << endl;
+	g16_com << "runisomer  " << isomernum << endl;
+	g16_com << endl;
+	g16_com << charge << " " << multiplicity << endl;
+	g16_com.precision(7);
+	g16_com.setf(ios::fixed);
 	for(unsigned int i = 0; i < vecAtoms.size(); i++) {
-		g09_com << vecAtoms[i].get_atomic_symbol() << " " << vecAtoms.at(i).get_new_x_force() << " " << vecAtoms.at(i).get_new_y_force() << " " << vecAtoms.at(i).get_new_z_force() << endl;
-		if((i > highlevel) && (i <= (highlevel+linkatoms))) g09_com << "M H" << endl;
-		else if(i > (highlevel+linkatoms)) g09_com << "M" << endl;
+		g16_com << vecAtoms[i].get_atomic_symbol() << " " << vecAtoms.at(i).get_new_x_force() << " " << vecAtoms.at(i).get_new_y_force() << " " << vecAtoms.at(i).get_new_z_force() << endl;
+		if((i > highlevel) && (i <= (highlevel+linkatoms))) g16_com << "M H" << endl;
+		else if(i > (highlevel+linkatoms)) g16_com << "M" << endl;
 	}
-	g09_com << endl;
-	if(meth5.size() > 2) g09_com << meth5 << endl;
-	if(meth6.size() > 2) g09_com << meth6 << endl;
+	g16_com << endl;
+	if(meth5.size() > 2) g16_com << meth5 << endl;
+	if(meth6.size() > 2) g16_com << meth6 << endl;
 	if(methodfilelines >= 1) {
 		ifstream methodfile;
 		methodfile.open("methodfile");
 		for(unsigned int i = 0; i < methodfilelines; i++) {
 			getline(methodfile, line);
-			g09_com << line << endl;
+			g16_com << line << endl;
 		}
 		methodfile.close();
 	}
 	if((nmrtype > 0) && (nmrdo == 1)) {
-		g09_com << "--link1--" << endl;
-		g09_com << "%nproc=" << processors << endl;
-		g09_com << "%mem=" << memory << endl;
-		g09_com << "%chk=" << checkpoint << endl;
-		g09_com << "# " << nmrmethod << " nmr=giao geom=check" << endl;
-		if(nmrmethod == method) g09_com << "guess=tcheck" << endl;
-		if(meth7.size() > 2) g09_com << meth7 << endl;
-		g09_com << endl;
-		g09_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
-		g09_com << "runpoint ," << runpointnum << endl;
-		g09_com << "runisomer ," << isomernum << endl;
-		g09_com << endl;
-		g09_com << charge << "," << multiplicity << endl;		
+		g16_com << "--link1--" << endl;
+		g16_com << "%nproc=" << processors << endl;
+		g16_com << "%mem=" << memory << endl;
+		g16_com << "%chk=" << checkpoint << endl;
+		g16_com << "# " << nmrmethod << " nmr=giao geom=check" << endl;
+		if(nmrmethod == method) g16_com << "guess=tcheck" << endl;
+		if(meth7.size() > 2) g16_com << meth7 << endl;
+		g16_com << endl;
+		g16_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
+		g16_com << "runpoint ," << runpointnum << endl;
+		g16_com << "runisomer ," << isomernum << endl;
+		g16_com << endl;
+		g16_com << charge << "," << multiplicity << endl;		
 	}
 	else if((nmrtype > 1) && (nmrdo == 1)) {
-		g09_com << "--link1--" << endl;
-		g09_com << "%nproc=" << processors << endl;
-		g09_com << "%mem=" << memory << endl;
-		g09_com << "%chk=" << checkpoint << endl;
-		g09_com << "# " << nmrmethod2 << " nmr=giao geom=check" << endl;
-		if(meth7.size() > 2) g09_com << meth7 << endl;
-		g09_com << endl;
-		g09_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
-		g09_com << "runpoint ," << runpointnum << endl;
-		g09_com << "runisomer ," << isomernum << endl;
-		g09_com << endl;
-		g09_com << charge << "," << multiplicity << endl;		
+		g16_com << "--link1--" << endl;
+		g16_com << "%nproc=" << processors << endl;
+		g16_com << "%mem=" << memory << endl;
+		g16_com << "%chk=" << checkpoint << endl;
+		g16_com << "# " << nmrmethod2 << " nmr=giao geom=check" << endl;
+		if(meth7.size() > 2) g16_com << meth7 << endl;
+		g16_com << endl;
+		g16_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
+		g16_com << "runpoint ," << runpointnum << endl;
+		g16_com << "runisomer ," << isomernum << endl;
+		g16_com << endl;
+		g16_com << charge << "," << multiplicity << endl;		
 	}
 	else if((nmrtype > 2) && (nmrdo == 1)) {
-		g09_com << "--link1--" << endl;
-		g09_com << "%nproc=" << processors << endl;
-		g09_com << "%mem=" << memory << endl;
-		g09_com << "%chk=" << checkpoint << endl;
-		g09_com << "# " << nmrmethod3 << " nmr=giao geom=check" << endl;
-		if(meth7.size() > 2) g09_com << meth7 << endl;
-		g09_com << endl;
-		g09_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
-		g09_com << "runpoint ," << runpointnum << endl;
-		g09_com << "runisomer ," << isomernum << endl;
-		g09_com << endl;
-		g09_com << charge << "," << multiplicity << endl;		
+		g16_com << "--link1--" << endl;
+		g16_com << "%nproc=" << processors << endl;
+		g16_com << "%mem=" << memory << endl;
+		g16_com << "%chk=" << checkpoint << endl;
+		g16_com << "# " << nmrmethod3 << " nmr=giao geom=check" << endl;
+		if(meth7.size() > 2) g16_com << meth7 << endl;
+		g16_com << endl;
+		g16_com << title1 << "," << title2 << "," << title3 << "," << title4 << endl;
+		g16_com << "runpoint ," << runpointnum << endl;
+		g16_com << "runisomer ," << isomernum << endl;
+		g16_com << endl;
+		g16_com << charge << "," << multiplicity << endl;		
 	}
 	else if((nmrcc == 1) && (nmrdo == 1)) {
 		ofstream ZMAT;
@@ -2110,12 +2110,12 @@ void progdynb(ProgdynConf& progdyn_conf, int isomernum, int runpointnum, string 
 		ZMAT << endl;
 		ZMAT.close();
 	}
-	g09_com << endl << endl << endl;
-	g09_com.close();
+	g16_com << endl << endl << endl;
+	g16_com.close();
 }
 
-void proggenHP(ProgdynConf& progdyn_conf, string g09_log_filepath) {
-	// input(ProgdynConf& progdyn_conf, ifstream tempstangeos, ifstream tempmasses, ifstream tempfreqs, ifstream tempresmass, ifstream tempfrc, ifstream tempmodes, ifstream cannontraj, ifstream temp811, ifsteam tempinputgeos, string g09_log_filepath)
+void proggenHP(ProgdynConf& progdyn_conf, string g16_log_filepath) {
+	// input(ProgdynConf& progdyn_conf, ifstream tempstangeos, ifstream tempmasses, ifstream tempfreqs, ifstream tempresmass, ifstream tempfrc, ifstream tempmodes, ifstream cannontraj, ifstream temp811, ifsteam tempinputgeos, string g16_log_filepath)
 	// output(ofstream diagnostics, ofstream modesread, ofstream maxMove)
 	vector<int> disMode; // FIX THIS
 	for(unsigned int i = 0; i < 10000; i++) { disMode.push_back(-1); } // FIX THIS
@@ -2587,9 +2587,9 @@ void proggenHP(ProgdynConf& progdyn_conf, string g09_log_filepath) {
 	if(boxon>0) geoPlusVel << "boxsize " << boxsize << endl;
 	if(DRP>0) geoPlusVel << "DRP " << DRP << "   maxAtomMove " << maxAtomMove << endl;
 
-	ifstream g09_log;
-	g09_log.open(g09_log_filepath.c_str());
-	while(getline(g09_log,line)) {
+	ifstream g16_log;
+	g16_log.open(g16_log_filepath.c_str());
+	while(getline(g16_log,line)) {
 		if(line.find("Zero-point correction") != string::npos) {
 			stringstream ss;
 			string discard;
@@ -2605,7 +2605,7 @@ void proggenHP(ProgdynConf& progdyn_conf, string g09_log_filepath) {
 			ss >> zpePlusE;
 		}
 	}
-	g09_log.close();
+	g16_log.close();
 
 	zpeGaussK = zpeGauss*627.509;
 	potentialE = zpePlusE - zpeGauss;
@@ -2630,10 +2630,10 @@ int main() {
 	const string GAUSS_SCRDIR = TEMPORARY_DIR + "/temporary_files";
 	const string PROG_SCRDIR = TEMPORARY_DIR + "/prog_files";
 	const string PROG_HOME = TEMPORARY_DIR;
-	const string G09_ROOT = "/blueapps/chem";
+	const string g16_ROOT = "/blueapps/chem";
 	const string RAND_DIR = TEMPORARY_DIR;
 	const string COM_LOG_FILES = "FIX THIS";
-	//. $G09_ROOT/gaussian/g09/bsd/g09.profile
+	//. $g16_ROOT/gaussian/g16/bsd/g16.profile
 
 	unsigned int runpointnumber = 1;
 	unsigned int isomernumber = 1;
@@ -2672,9 +2672,9 @@ int main() {
 				if(isomernumber) isomernumber++;
 				else isomernumber = 1;
 				runpointnumber = 1;
-				remove("g09.com");
+				remove("g16.com");
 				prog1stpoint(progdyn_conf, isomernumber, runpointnumber);
-				if(file_exists("g09.com")) {
+				if(file_exists("g16.com")) {
 					remove("tempfreqs");
 					remove("tempredmass");
 					remove("tempfrc");
@@ -2687,24 +2687,24 @@ int main() {
 					append_to_geoRecord(to_string(isomernumber) + " ----trajectory isomer number----");
 					cat_append("geoPlusVel", "geoRecord");
 					goingwell = false;
-					cp(TEMPORARY_DIR + "/g09.com", PROG_SCRDIR + "/g09.com");
-					cp(PROG_SCRDIR + "/g09.com", COM_LOG_FILES + "/g09" + to_string(iteration_number) + ".com");
-					system((G09_ROOT + "/bin/rung09 " + PROG_SCRDIR + "/g09.com > " + PROG_SCRDIR + "/g09.log").c_str());
-					cp(PROG_SCRDIR + "/g09.log", COM_LOG_FILES + "/g09" + to_string(iteration_number) + ".log");
+					cp(TEMPORARY_DIR + "/g16.com", PROG_SCRDIR + "/g16.com");
+					cp(PROG_SCRDIR + "/g16.com", COM_LOG_FILES + "/g16" + to_string(iteration_number) + ".com");
+					system((g16_ROOT + "/bin/rung16 " + PROG_SCRDIR + "/g16.com > " + PROG_SCRDIR + "/g16.log").c_str());
+					cp(PROG_SCRDIR + "/g16.log", COM_LOG_FILES + "/g16" + to_string(iteration_number) + ".log");
 					iteration_number++;
-					goingwell = grep_Normal_termination(PROG_SCRDIR + "/g09.log");
+					goingwell = grep_Normal_termination(PROG_SCRDIR + "/g16.log");
 					if(goingwell) {
-						cat_append(PROG_SCRDIR + "/g09.log", "dyn");
-						cp(PROG_SCRDIR + "/g09.log", "olderdynrun");
+						cat_append(PROG_SCRDIR + "/g16.log", "dyn");
+						cp(PROG_SCRDIR + "/g16.log", "olderdynrun");
 					}
-					else cp(PROG_SCRDIR + "/g09.log", TEMPORARY_DIR + "/g09.log");
+					else cp(PROG_SCRDIR + "/g16.log", TEMPORARY_DIR + "/g16.log");
 					break;
 				}
 				else break;
-				remove("g09.com");
+				remove("g16.com");
 				runpointnumber = 2;
-				prog2ndpoint(progdyn_conf, isomernumber, runpointnumber, skipstart, TEMPORARY_DIR + "/g09.log");
-				proganal(isomernumber, runpointnumber, skipstart, nogo, TEMPORARY_DIR + "/g09.log");
+				prog2ndpoint(progdyn_conf, isomernumber, runpointnumber, skipstart, TEMPORARY_DIR + "/g16.log");
+				proganal(isomernumber, runpointnumber, skipstart, nogo, TEMPORARY_DIR + "/g16.log");
 				tempdone = bool_find_XXXX_last_n_lines("dynfollowfile", 10); // tail -1 dynfollowfile | awk '/XXXX/ {print}' > $PROG_SCRDIR/tempdone
 				if (tempdone) {
 					remove("dyn");
@@ -2712,27 +2712,27 @@ int main() {
 					runpointnumber = 0;
 					break;
 				}
-				if(file_exists("g09.com")) {
+				if(file_exists("g16.com")) {
 					goingwell = false;
-					cp(TEMPORARY_DIR + "/g09.com", PROG_SCRDIR + "/g09.com");
-					cp(PROG_SCRDIR + "/g09.com", COM_LOG_FILES + "/g09" + to_string(iteration_number) + ".com");
-					system((G09_ROOT + "/bin/rung09 " + PROG_SCRDIR + "/g09.com > " + PROG_SCRDIR + "/g09.log").c_str());
-					cp(PROG_SCRDIR + "/g09.log", COM_LOG_FILES + "/g09" + to_string(iteration_number) + ".log");
+					cp(TEMPORARY_DIR + "/g16.com", PROG_SCRDIR + "/g16.com");
+					cp(PROG_SCRDIR + "/g16.com", COM_LOG_FILES + "/g16" + to_string(iteration_number) + ".com");
+					system((g16_ROOT + "/bin/rung16 " + PROG_SCRDIR + "/g16.com > " + PROG_SCRDIR + "/g16.log").c_str());
+					cp(PROG_SCRDIR + "/g16.log", COM_LOG_FILES + "/g16" + to_string(iteration_number) + ".log");
 					iteration_number++;
-					goingwell = grep_Normal_termination(PROG_SCRDIR + "/g09.log");
+					goingwell = grep_Normal_termination(PROG_SCRDIR + "/g16.log");
 					if(goingwell) {
-						cp(PROG_SCRDIR + "/g09.log", "olddynrun");
-						cat_append(PROG_SCRDIR + "/g09.log", "dyn");
-						proganal(isomernumber, runpointnumber, skipstart, nogo, TEMPORARY_DIR + "/g09.log");
+						cp(PROG_SCRDIR + "/g16.log", "olddynrun");
+						cat_append(PROG_SCRDIR + "/g16.log", "dyn");
+						proganal(isomernumber, runpointnumber, skipstart, nogo, TEMPORARY_DIR + "/g16.log");
 						create_old(); //awk '/Input orientation/,/Distance matrix/ {print}' olddynrun | awk '/   0   / {print}' > old
 						create_older(); //awk '/Input orientation/,/Distance matrix/ {print}' olderdynrun | awk '/   0   / {print}' > older
 						runpointnumber = 3;
-						progdynb(progdyn_conf, isomernumber, runpointnumber, PROG_SCRDIR +"/g09.log");
+						progdynb(progdyn_conf, isomernumber, runpointnumber, PROG_SCRDIR +"/g16.log");
 						remove("old");
 						remove("older");
 					}
 					else {
-						cp(PROG_SCRDIR + "/g09.log", TEMPORARY_DIR + "/g09.log");
+						cp(PROG_SCRDIR + "/g16.log", TEMPORARY_DIR + "/g16.log");
 						break;
 					}
 				}
@@ -2740,54 +2740,54 @@ int main() {
 				skipstart = "forward";
 			}
 			if(skipstart == "reverserestart") {
-				remove("g09.com");
+				remove("g16.com");
 				runpointnumber = 1;
 				prog1stpoint(progdyn_conf, isomernumber, runpointnumber);
-				if(file_exists("g09.com")) {
+				if(file_exists("g16.com")) {
 					goingwell = false;
-					cp(TEMPORARY_DIR + "/g09.com", PROG_SCRDIR + "/g09.com");
-					cp(PROG_SCRDIR + "/g09.com", COM_LOG_FILES + "/g09" + to_string(iteration_number) + ".com");
-					system((G09_ROOT + "/bin/rung09 " + PROG_SCRDIR + "/g09.com > " + PROG_SCRDIR + "/g09.log").c_str());
-					cp(PROG_SCRDIR + "/g09.log", COM_LOG_FILES + "/g09" + to_string(iteration_number) + ".log");
+					cp(TEMPORARY_DIR + "/g16.com", PROG_SCRDIR + "/g16.com");
+					cp(PROG_SCRDIR + "/g16.com", COM_LOG_FILES + "/g16" + to_string(iteration_number) + ".com");
+					system((g16_ROOT + "/bin/rung16 " + PROG_SCRDIR + "/g16.com > " + PROG_SCRDIR + "/g16.log").c_str());
+					cp(PROG_SCRDIR + "/g16.log", COM_LOG_FILES + "/g16" + to_string(iteration_number) + ".log");
 					iteration_number++;
-					goingwell = grep_Normal_termination(PROG_SCRDIR + "/g09.log");
+					goingwell = grep_Normal_termination(PROG_SCRDIR + "/g16.log");
 					if(goingwell) {
-						cp(PROG_SCRDIR + "/g09.log", "olderdynrun");
+						cp(PROG_SCRDIR + "/g16.log", "olderdynrun");
 					}
 					else {
-						cp(PROG_SCRDIR + "/g09.log", TEMPORARY_DIR + "/g09.log");
+						cp(PROG_SCRDIR + "/g16.log", TEMPORARY_DIR + "/g16.log");
 						break;
 					}
 				}
 				else {
 					break;
 				}
-				remove("g09.com");
+				remove("g16.com");
 				runpointnumber = 2;
-				prog2ndpoint(progdyn_conf, isomernumber, runpointnumber, skipstart, TEMPORARY_DIR + "/g09.log");
-				proganal(isomernumber, runpointnumber, skipstart, nogo, TEMPORARY_DIR + "/g09.log");
+				prog2ndpoint(progdyn_conf, isomernumber, runpointnumber, skipstart, TEMPORARY_DIR + "/g16.log");
+				proganal(isomernumber, runpointnumber, skipstart, nogo, TEMPORARY_DIR + "/g16.log");
 				tempdone = false;
-				if(file_exists("g09.com")) {
+				if(file_exists("g16.com")) {
 					goingwell = false;
-					cp(TEMPORARY_DIR + "/g09.com", PROG_SCRDIR + "/g09.com");
-					cp(PROG_SCRDIR + "/g09.com", COM_LOG_FILES + "/g09" + to_string(iteration_number) + ".com");
-					system((G09_ROOT + "/bin/rung09 " + PROG_SCRDIR + "/g09.com > " + PROG_SCRDIR + "/g09.log").c_str());
-					cp(PROG_SCRDIR + "/g09.log", COM_LOG_FILES + "/g09" + to_string(iteration_number) + ".log");
+					cp(TEMPORARY_DIR + "/g16.com", PROG_SCRDIR + "/g16.com");
+					cp(PROG_SCRDIR + "/g16.com", COM_LOG_FILES + "/g16" + to_string(iteration_number) + ".com");
+					system((g16_ROOT + "/bin/rung16 " + PROG_SCRDIR + "/g16.com > " + PROG_SCRDIR + "/g16.log").c_str());
+					cp(PROG_SCRDIR + "/g16.log", COM_LOG_FILES + "/g16" + to_string(iteration_number) + ".log");
 					iteration_number++;
-					goingwell = grep_Normal_termination(PROG_SCRDIR + "/g09.log");
+					goingwell = grep_Normal_termination(PROG_SCRDIR + "/g16.log");
 					if(goingwell) {
-						cp(PROG_SCRDIR + "/g09.log", "olddynrun");
-						cat_append(PROG_SCRDIR + "/g09.log", "dyn");
-						proganal(isomernumber, runpointnumber, skipstart, nogo, TEMPORARY_DIR + "/g09.log");
+						cp(PROG_SCRDIR + "/g16.log", "olddynrun");
+						cat_append(PROG_SCRDIR + "/g16.log", "dyn");
+						proganal(isomernumber, runpointnumber, skipstart, nogo, TEMPORARY_DIR + "/g16.log");
 						create_old(); //awk '/Input orientation/,/Distance matrix/ {print}' olddynrun | awk '/   0   / {print}' > old
 						create_older(); //awk '/Input orientation/,/Distance matrix/ {print}' olderdynrun | awk '/   0   / {print}' > older
 						runpointnumber = 3;
-						progdynb(progdyn_conf, isomernumber, runpointnumber, PROG_SCRDIR +"/g09.log");
+						progdynb(progdyn_conf, isomernumber, runpointnumber, PROG_SCRDIR +"/g16.log");
 						remove("old");
 						remove("older");
 					}
 					else {
-						cp(PROG_SCRDIR + "/g09.log", TEMPORARY_DIR + "/g09.log");
+						cp(PROG_SCRDIR + "/g16.log", TEMPORARY_DIR + "/g16.log");
 						break;
 					}
 				}
@@ -2799,24 +2799,24 @@ int main() {
 			while(true) { // start while::A
 				runpointnumber++;
 				goingwell = false;
-				cp(TEMPORARY_DIR + "/g09.com", PROG_SCRDIR + "/g09.com");
-				cp(PROG_SCRDIR + "/g09.com", COM_LOG_FILES + "/g09" + to_string(iteration_number) + ".com");
-				system((G09_ROOT + "/bin/rung09 " + PROG_SCRDIR + "/g09.com > " + PROG_SCRDIR + "/g09.log").c_str());
-				cp(PROG_SCRDIR + "/g09.log", COM_LOG_FILES + "/g09" + to_string(iteration_number) + ".log");
+				cp(TEMPORARY_DIR + "/g16.com", PROG_SCRDIR + "/g16.com");
+				cp(PROG_SCRDIR + "/g16.com", COM_LOG_FILES + "/g16" + to_string(iteration_number) + ".com");
+				system((g16_ROOT + "/bin/rung16 " + PROG_SCRDIR + "/g16.com > " + PROG_SCRDIR + "/g16.log").c_str());
+				cp(PROG_SCRDIR + "/g16.log", COM_LOG_FILES + "/g16" + to_string(iteration_number) + ".log");
 				iteration_number++;
-				goingwell = grep_Normal_termination(PROG_SCRDIR + "/g09.log");
+				goingwell = grep_Normal_termination(PROG_SCRDIR + "/g16.log");
 				if(goingwell) {
-					proganal(isomernumber, runpointnumber, skipstart, nogo, TEMPORARY_DIR + "/g09.log"); //awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g09.log >> $TEMPORARY_DIR/dynfollowfile
+					proganal(isomernumber, runpointnumber, skipstart, nogo, TEMPORARY_DIR + "/g16.log"); //awk -f $TEMPORARY_DIR/proganal $PROG_SCRDIR/g16.log >> $TEMPORARY_DIR/dynfollowfile
 					mv("olddynrun", "olderdynrun");
-					create_old(); //awk '/Input orientation/,/Distance matrix/ {print}' $PROG_SCRDIR/g09.log | awk '/   0   / {print}' > old
-					cp(PROG_SCRDIR + "/g09.log", "olddynrun");
+					create_old(); //awk '/Input orientation/,/Distance matrix/ {print}' $PROG_SCRDIR/g16.log | awk '/   0   / {print}' > old
+					cp(PROG_SCRDIR + "/g16.log", "olddynrun");
 					create_older(); //awk '/Input orientation/,/Distance matrix/ {print}' olderdynrun | awk '/   0   / {print}' > older
-					progdynb(progdyn_conf, isomernumber, runpointnumber, PROG_SCRDIR +"/g09.log"); //awk -f $TEMPORARY_DIR/progdynb $PROG_SCRDIR/g09.log > g09.com
+					progdynb(progdyn_conf, isomernumber, runpointnumber, PROG_SCRDIR +"/g16.log"); //awk -f $TEMPORARY_DIR/progdynb $PROG_SCRDIR/g16.log > g16.com
 					remove("old");
 					remove("older");
 				}
 				else {
-					cp(PROG_SCRDIR + "/g09.log", TEMPORARY_DIR + "/g09.log");
+					cp(PROG_SCRDIR + "/g16.log", TEMPORARY_DIR + "/g16.log");
 					break;
 				}
 				if(file_exists("ZMAT")) {
@@ -2831,7 +2831,7 @@ int main() {
 					print_date_to_file(LOG_FILE); //date >> $LOG_FILE
 					cat_append("run.com", LOG_FILE);
 					cp("run.log", "temp.log");
-					system((G09_ROOT + "/bin/rung09 " + TEMPORARY_DIR + "/run.com > " + TEMPORARY_DIR + "/run.log").c_str());
+					system((g16_ROOT + "/bin/rung16 " + TEMPORARY_DIR + "/run.com > " + TEMPORARY_DIR + "/run.log").c_str());
 				}
 				if(nogo) break;
 				tempdone = false;
