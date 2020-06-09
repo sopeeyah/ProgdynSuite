@@ -8,13 +8,13 @@ else
 	exit 0 # and then quit
 fi
 echo Current sbatch values:
-walltime=`grep "#SBATCH --time=" $HOME/ProgdynSuite/SubmitScripts/g09.sh`
+walltime=`grep "#SBATCH --time=" $HOME/ProgdynSuite/SubmitScripts/g16.sh`
 echo "Walltime:                  ${walltime/"#SBATCH --time="}"
-ntasks=`grep "#SBATCH --ntasks=" $HOME/ProgdynSuite/SubmitScripts/g09.sh`
+ntasks=`grep "#SBATCH --ntasks=" $HOME/ProgdynSuite/SubmitScripts/g16.sh`
 echo "Number of processor cores: ${ntasks/"#SBATCH --ntasks="}"
-nodes=`grep "#SBATCH --nodes=" $HOME/ProgdynSuite/SubmitScripts/g09.sh`
+nodes=`grep "#SBATCH --nodes=" $HOME/ProgdynSuite/SubmitScripts/g16.sh`
 echo "Number of nodes:           ${nodes/"#SBATCH --nodes="}"
-mem_per_cpu=`grep "#SBATCH --mem-per-cpu=" $HOME/ProgdynSuite/SubmitScripts/g09.sh`
+mem_per_cpu=`grep "#SBATCH --mem-per-cpu=" $HOME/ProgdynSuite/SubmitScripts/g16.sh`
 echo "Memory per CPU:            ${mem_per_cpu/"#SBATCH --mem-per-cpu="}"
 echo
 echo All of the .com files in the current directory "$PWD":
@@ -40,14 +40,14 @@ do
 		fi
 		TEMPORARY_DIR=$HOME/ProgdynSuite/RunOutputs/"temp$newdirnum" # file path of our new temp directory
 		mkdir $HOME/ProgdynSuite/RunOutputs/temp$newdirnum # make the new temp directory
-		cp $HOME/ProgdynSuite/SubmitScripts/g09.sh $HOME/ProgdynSuite/RunOutputs/temp$newdirnum # copy the script to run gaussian to the temp directory
-		sed -i "s~export JOB_NAME=REPLACEME~export JOB_NAME=$JOB_NAME~g" $HOME/ProgdynSuite/RunOutputs/temp"$newdirnum"/g09.sh # set the JOB_NAME varable
-		sed -i "s~export FILES_NEEDED_DIR=REPLACEME~export FILES_NEEDED_DIR="$TEMPORARY_DIR"~g" $HOME/ProgdynSuite/RunOutputs/temp"$newdirnum"/g09.sh # set the TEMPORARY_DIR variable
+		cp $HOME/ProgdynSuite/SubmitScripts/g16.sh $HOME/ProgdynSuite/RunOutputs/temp$newdirnum # copy the script to run gaussian to the temp directory
+		sed -i "s~export JOB_NAME=REPLACEME~export JOB_NAME=$JOB_NAME~g" $HOME/ProgdynSuite/RunOutputs/temp"$newdirnum"/g16.sh # set the JOB_NAME varable
+		sed -i "s~export FILES_NEEDED_DIR=REPLACEME~export FILES_NEEDED_DIR="$TEMPORARY_DIR"~g" $HOME/ProgdynSuite/RunOutputs/temp"$newdirnum"/g16.sh # set the TEMPORARY_DIR variable
 		cp $com_directory/$file $HOME/ProgdynSuite/RunOutputs/temp$newdirnum # copy the com file to the new temp directory
 		cd $HOME/ProgdynSuite/RunOutputs/temp$newdirnum # change the current directory to the new temp directory
 		echo Submitting $file
-		sbatch g09.sh # submit g09.sh to the scheduling queue
-		rm $HOME/ProgdynSuite/RunOutputs/temp"$newdirnum"/g09.sh
+		sbatch g16.sh # submit g16.sh to the scheduling queue
+		rm $HOME/ProgdynSuite/RunOutputs/temp"$newdirnum"/g16.sh
 	elif [ "$y_n_response" = "n" -o "$y_n_response" = "N" ] ; then
 		: # do nothing
 	else
